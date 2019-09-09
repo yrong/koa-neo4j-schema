@@ -1,0 +1,27 @@
+{
+  "id": "Hardware",
+  "allOf":
+  [
+    {"$ref": "Asset"},
+    {"properties":
+      {
+        "model":{
+          "type": "string"
+        },
+        "product_date":{
+          "type": "string",
+          "format": "date"
+        },
+        "warranty_expiration_date":{
+          "type": "string",
+          "format": "date"
+        },
+        "retirement_date":{
+          "type": "string",
+          "format": "date"
+        }
+      }
+    }
+  ],
+  "required": ["product_date"]
+}

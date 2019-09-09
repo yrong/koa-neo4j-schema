@@ -1,0 +1,14 @@
+{
+  "id": "PhysicalServer",
+  "allOf": [
+    {"$ref": "Server"},
+    {"$ref": "Hardware"},
+    {"properties": {
+      "management_ip":{
+        "type": "array",
+        "items": {"type": "string"}
+        }
+      }
+    }
+  ]
+}

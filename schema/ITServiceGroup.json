@@ -1,0 +1,17 @@
+{
+  "id": "ITServiceGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": ["name"],
+  "service":"cmdb",
+  "route":"/api/it_services/group",
+  "getMember":"true",
+  "uniqueKeys":["name"]
+}

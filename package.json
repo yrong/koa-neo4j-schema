@@ -1,0 +1,50 @@
+{
+  "name": "scirichon-crud-handler",
+  "version": "1.1.0-beta.13",
+  "bin": {
+    "scirichon-crud-api": "run.js"
+  },
+  "scripts": {
+    "test": "NODE_NAME=cmdb SCHEMA_TYPE=cmdb NODE_ENV=development mocha",
+    "checkStyle": "standard",
+    "fixStyle": "standard --fix",
+    "prepublish": "npm run fixStyle&&npm run checkStyle&&npm run test"
+  },
+  "standard": {
+    "ignore": [
+      "middlewares/**/*.js",
+      "routes/**/*.js",
+      "test/**/*.js"
+    ]
+  },
+  "main": "index.js",
+  "dependencies": {
+    "config": "^3.1.0",
+    "jsonpath": "^1.0.2",
+    "koa-body": "^4.1.0",
+    "koa-compose": "^4.1.0",
+    "kcors": "^2.2.2",
+    "koa-neo4j": "^1.5.1",
+    "license-helper": "^1.0.7",
+    "lodash": "^4.17.11",
+    "log4js-wrapper-advanced": "^1.0.5",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.24.0",
+    "scirichon-authenticator": "1.0.0-beta.3",
+    "scirichon-cache": "1.0.11-beta.8",
+    "scirichon-common": "1.0.7-beta.6",
+    "scirichon-json-exp-imp": "1.0.5-beta.22",
+    "scirichon-json-schema": "1.0.3-beta.4",
+    "scirichon-json-schema-init": "1.0.5-beta.15",
+    "scirichon-response-mapper": "1.0.7-beta.9",
+    "scirichon-response-wrapper": "1.0.2-beta.3",
+    "scirichon-search": "1.0.6-beta.14",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^3.4.1",
+    "standard": "^12.0.1",
+    "supertest": "^4.0.2"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "ConfigurationItem",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "it_service": {
+      "type": "array",
+      "items": { "type": "string", "schema":"ITService","relationship":{"name":"SUPPORT_SERVICE"}},
+      "uniqueItems": true
+    },
+    "monitored": {
+      "type": "boolean",
+      "default": false
+    },
+    "responsibility":{
+        "type": "string",
+        "schema":"User",
+        "relationship":{"name":"RESPONSIBLE_FOR","reverse":true}
+    },
+    "technical_support_info": {
+      "type": "string"
+    },
+    "status":{
+      "type":"object",
+      "properties":{
+        "status":{
+          "type": "string"
+        }
+      }
+    },
+    "used_by_user":{
+      "type":"object",
+      "properties":{
+        "dn":{
+          "type": "string"
+        }
+      }
+    },
+    "used_by_dept":{
+      "type":"object",
+      "properties":{
+        "dn":{
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": ["name"],
+  "service":"cmdb",
+  "route": "/api/cfgItems",
+  "search":{"index":"cmdb"},
+  "uniqueKeys":["name","ip_address"],
+  "notification":true
+}

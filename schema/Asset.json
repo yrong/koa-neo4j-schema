@@ -1,0 +1,53 @@
+{
+  "id": "Asset",
+  "allOf": [
+    {
+      "$ref": "ConfigurationItem"
+    },
+    {
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "sn": {
+          "type": "string"
+        },
+        "asset_location":{
+          "type":"object",
+          "properties" : {
+            "status":{"type":"string","enum": ["mounted", "unmounted","on_shelf","other"]},
+            "cabinet":{"type":"string","schema":"Cabinet","relationship":{"name":"LOCATED","parentObjectAsRelProperty":true}},
+            "date_mounted" : {
+              "type" : "string",
+              "format": "date"
+            },
+            "u" : {
+              "type" : "integer"
+            },
+            "shelf":{"type":"string","schema":"Shelf","relationship":{"name":"LOCATED","parentObjectAsRelProperty":true}},
+            "label":{"type":"string"}
+          }
+        },
+        "geo_location": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

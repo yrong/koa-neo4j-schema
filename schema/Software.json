@@ -1,0 +1,15 @@
+{
+  "id": "Software",
+  "allOf": [
+    {"$ref": "Asset"},
+    {"properties":
+      {
+        "software":{
+          "type": "string",
+          "schema":"Software",
+          "relationship":{"name":"LICENSED_TO"}
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "perPageSize":2000,
+  "wrapResponse": true,
+  "enableCors": false,
+  "additionalPropertyCheck":false,
+  "preImportReference":true,
+  "checkLicense": false,
+  "checkAuth": true,
+  "globalTransaction": true,
+  "logger":{
+    "defaultLevel":"trace"
+  },
+  "timeout": 30000,
+  "addRefUniqueNameField": false,
+  "cmdb":{
+    "host":"localhost",
+    "port":3001,
+    "expiredWarningPeriod": 180,
+    "expiredWarning2ndPeriod": 30,
+    "expiredPeriodTimeUnit": "days",
+    "expiredEventSubscriber":{
+      "roles":["superAdmin"],
+      "mail":{"to":["test@qq.com"]}
+    }
+  },
+  "kb":{
+    "host":"localhost",
+    "port":3000
+  },
+  "auth":{
+    "host":"localhost",
+    "port":3002,
+    "secret": "WEvHL/pbqX6qpqrcORwHQYWmNWnguxiaMEHd7eWnZB1toHzO",
+    "expiration": 86400,
+    "userFieldsIgnored4Token":["passwd","id","token","newpwd","oldpwd"],
+    "tokenFieldName":"token",
+    "userFieldName":"token_user",
+    "internalUsedToken":"qwe!@#",
+    "apiUrlPattern": "\\/api",
+    "ignoredUrlPattern": "\\/no_auth|\\/hidden",
+    "sms":{
+      "AppCode":"b0eed151df1640d188bdd7ed93f89506",
+      "expiration": 120,
+      "sendFlag": false
+    },
+    "ldap":{
+      "url": "ldap://localhost:389",
+      "bindType":"localName",
+      "bindDn": "cn=admin,dc=test,dc=com",
+      "bindCredentials": "admin",
+      "searchFilter": "(cn={{username}})",
+      "userSearchBase": "dc=test,dc=com",
+      "departmentSearchBase": "dc=test,dc=com",
+      "userClass": "posixAccount",
+      "userAttributes":["localName","dn","cn","uidNumber"],
+      "departmentClass":"posixGroup",
+      "departmentAttributes":["dn","cn","gidNumber"],
+      "reconnect": true,
+      "checkExist":false
+    }
+  },
+  "notifier":{
+    "host":"localhost",
+    "port":3004
+  },
+  "mail": {
+    "host": "smtp.qq.com",
+    "secure": true,
+    "port": 465,
+    "auth": {
+      "user": "test@qq.com",
+      "pass": "ksbwhobbkgngbddi"
+    },
+    "from":"\"test\" <test@qq.com>"
+  },
+  "neo4j": {
+    "host": "localhost",
+    "port": 7687,
+    "user": "neo4j",
+    "password": "admin"
+  },
+  "elasticsearch":{
+    "host": "localhost",
+    "port": 9200,
+    "user":"elastic",
+    "password":"elastic",
+    "mode": "loose",
+    "ignoreAggrMetaFields": false
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+    "auth_pass": "admin",
+    "no_ready_check": true
+  },
+  "postgres-notifier": {
+    "host": "localhost",
+    "port": 5433,
+    "database": "notification",
+    "user": "postgres",
+    "password": "postgres",
+    "max": 50,
+    "idleTimeoutMillis": 3000,
+    "zhparser":"chinese"
+  }
+}

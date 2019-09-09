@@ -1,0 +1,26 @@
+{
+  "id": "Server",
+  "allOf": [
+    {"$ref": "Asset"},
+    {"properties": {
+        "operating_system": {
+          "type": "string",
+          "schema":"Software",
+          "relationship":{"name":"RUNS_ON","reverse":true}
+        },
+        "applications":{
+            "type": "array",
+            "items": {"type": "string","schema":"Software","relationship":{"name":"RUNS_ON","reverse":true}},
+            "uniqueItems": true
+        },
+        "storage_info":{
+          "type": "string"
+        },
+        "hardware_info":{
+          "type": "string"
+        }
+      }
+    }
+  ],
+  "required": ["ip_address", "operating_system"]
+}
