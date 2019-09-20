@@ -28,6 +28,7 @@ module.exports = {
     return global._scirichonHandlers || {}
   },
   cudItem_preProcess: async function (params, ctx) {
+    logger.trace(`before preprocess:\n` + JSON.stringify(params, null, 2))
     params = await requestHandler.handleRequest(params, ctx)
     let customizedHandler = global._scirichonHandlers && global._scirichonHandlers[params.category]
     if (customizedHandler) {
@@ -39,9 +40,11 @@ module.exports = {
     if (ctx.method === 'POST' || ctx.method === 'PUT' || ctx.method === 'PATCH') {
       params.stringified_fields = requestHandler.objectFields2String(_.assign({}, params.fields))
     }
+    logger.trace(`after preprocess:\n` + JSON.stringify(params, null, 2))
     return params
   },
   cudItem_postProcess: async function (result, params, ctx) {
+    logger.trace(`before postprocess:\n` + JSON.stringify(params, null, 2))
     let customizedHandler = global._scirichonHandlers && global._scirichonHandlers[params.category]
     if (customizedHandler) {
       if (params.procedure && params.procedure.ignoreCustomizedHandler) {
@@ -56,7 +59,9 @@ module.exports = {
         throw new ScirichonWarning('no record found')
       }
       try {
+        logger.trace(`before es operation`)
         await requestPostHandler.updateSearch(params, ctx)
+        logger.trace(`after es operation`)
       } catch (e) {
         logger.error(e.stack || e)
         if (config.get('globalTransaction')) {
@@ -65,10 +70,13 @@ module.exports = {
           throw new ScirichonWarning(String(e))
         }
       } try {
+        logger.trace(`before cache operation`)
         await Promise.all([requestPostHandler.updateCache(params, ctx), requestPostHandler.addNotification(params, ctx)])
+        logger.trace(`after cache operation`)
       } catch (e) {
         logger.error(e.stack || e)
       }
+      logger.trace(`after postprocess:\n` + JSON.stringify(params, null, 2))
       return { uuid: params.uuid } || {}
     }
   },

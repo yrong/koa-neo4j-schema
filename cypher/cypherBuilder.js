@@ -19,12 +19,12 @@ const generateNodeCypher = (params) => {
   return addNodeCypher(labels)
 }
 
-const generateDelNodeCyphers = (params) => {
-  return [`MATCH (n)
+const generateDelNodeCypher = (params) => {
+  return `MATCH (n:${params.category})
     WHERE n.uuid = {uuid}
     DETACH
     DELETE n
-    return n`]
+    return n`
 }
 
 const generateDelNodesByCategoryCypher = (category) =>
@@ -83,7 +83,7 @@ const generateQueryItemWithMembersCypher = (label) => {
  * query node and relations
  */
 const generateQueryNodeWithRelationCypher = (params) => {
-  return `MATCH (n{uuid: {uuid}})
+  return `MATCH (n:${params.category}{uuid: {uuid}})
     OPTIONAL MATCH (n)-[]-(c)
     WITH n as self,collect(c) as items
     RETURN self,items`
@@ -176,7 +176,7 @@ module.exports = {
     let cyphers = [generateNodeCypher(params), ...generateDeleteRelationCypher(params), ...generateAddRelationCypher(params)]
     return cyphers
   },
-  generateDelNodeCyphers,
+  generateDelNodeCypher,
   generateQueryNodesCypher: (params) => {
     let condition = `where not exists(n.status) or n.status<>'deleted'`; let cypher; let label = params.category; let sort = params.sort ? `n.${params.sort}` : `n.lastUpdated`
 

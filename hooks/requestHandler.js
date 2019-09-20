@@ -256,7 +256,7 @@ const generateCypher = async (params, ctx) => {
   } else if (ctx.method === 'PUT' || ctx.method === 'PATCH') {
     params.cypher = cypherBuilder.generateUpdateCyphers(params)
   } else if (ctx.method === 'DELETE') {
-    params.cypher = cypherBuilder.generateDelNodeCyphers(params)
+    params.cypher = cypherBuilder.generateDelNodeCypher(params)
   } else if (ctx.method === 'GET') {
     if (params.uuid) {
       params.cypher = cypherBuilder.generateQueryNodeCypher(params)
