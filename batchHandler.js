@@ -11,7 +11,7 @@ const hooks = require('./hooks')
 const config = require('config')
 
 const batchUpdate = async (ctx, category, uuids, change_obj, removed) => {
-  let cypher = `unwind {uuids} as uuid match (n:${category}) where n.uuid=uuid set `; let script = ``; let old_obj; let new_obj
+  let cypher = `unwind $uuids as uuid match (n:${category}) where n.uuid=uuid set `; let script = ``; let old_obj; let new_obj
   let stringified_change_obj = _.omit(requestHandler.objectFields2String(_.assign({ category }, change_obj)), 'category')
   for (let key in stringified_change_obj) {
     cypher += `n.${key}={${key}},`
@@ -73,13 +73,27 @@ const batchPreprocess = async (params, ctx) => {
 const batchCypherNodes = async (params, ctx) => {
   let cypher, result
   if (ctx.method === 'POST' || ctx.method === 'PUT') {
-    let labels = schema.getParentCategories(params.data.category)
-    labels = _.isArray(labels) ? labels.join(':') : params.data.category
-    let stringified_fields = _.map(params.data.fields, (item) => item.stringified_fields)
-    cypher = `unwind {items} as item merge (n:${labels} {uuid:item.uuid}) on create set n=item on match set n=item`
-    result = await cypherInvoker.executeCypher(ctx, cypher, { items: stringified_fields })
+    const session = ctx.app.neo4jConnection.driver.session()
+    try {
+      const tx = session.beginTransaction()
+      let labels = schema.getParentCategories(params.data.category)
+      labels = _.isArray(labels) ? labels.join(':') : params.data.category
+      let stringified_fields = _.map(params.data.fields, (item) => item.stringified_fields)
+      cypher = `unwind $items as item merge (n:${labels} {uuid:item.uuid}) on create set n=item on match set n=item`
+      result = await tx.run(cypher, { items: stringified_fields })
+      for (let item of params.data.fields) {
+        for (let cypher of item.relationCypher) {
+          await tx.run(cypher, item)
+        }
+      }
+      await tx.commit()
+      session.close()
+    } catch (error) {
+      session.close()
+      throw new Error(`error while executing Cypher: ${error}`)
+    }
   } else if (ctx.method === 'DELETE') {
-    cypher = `unwind {uuids} as uuid match (n:${params.data.category} {uuid:uuid}) detach delete n`
+    cypher = `unwind $uuids as uuid match (n:${params.data.category} {uuid:uuid}) detach delete n`
     result = await cypherInvoker.executeCypher(ctx, cypher, { uuids: params.data.uuids })
   }
   params.data.result = result

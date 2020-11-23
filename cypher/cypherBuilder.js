@@ -8,20 +8,20 @@ const jp = require('jsonpath')
 /**
  * common template
  */
-const addNodeCypher = (labels) => `MERGE (n:${labels} {uuid: {uuid}})
-                                    ON CREATE SET n = {stringified_fields}
-                                    ON MATCH SET n = {stringified_fields}`
+const addNodeCypher = (labels) => `MERGE (n:${labels} {uuid: $uuid})
+                                    ON CREATE SET n = $stringified_fields
+                                    ON MATCH SET n = $stringified_fields`
 
 const generateNodeCypher = (params) => {
   let labels = schema.getParentCategories(params.category)
-  if (params.fields && params.fields.tags) { labels = [...labels, params.fields.tags] }
+  if (params.fields && params.fields.tags) { labels = [...labels, ...params.fields.tags] }
   labels = _.isArray(labels) ? labels.join(':') : params.category
   return addNodeCypher(labels)
 }
 
 const generateDelNodeCypher = (params) => {
   return `MATCH (n:${params.category})
-    WHERE n.uuid = {uuid}
+    WHERE n.uuid = $uuid
     DETACH
     DELETE n
     return n`
@@ -34,7 +34,7 @@ const generateDelNodesByCategoryCypher = (category) =>
 
 const generateQueryNodeCypher = (params) =>
   `MATCH (n:${params.category})
-    WHERE n.uuid = {uuid}
+    WHERE n.uuid = $uuid
     RETURN n`
 
 const findNodesCypher = (label, condition, sort, order) =>
@@ -55,14 +55,14 @@ const findPaginatedNodesCypher = (label, condition, sort, order) =>
     WITH
     n as n, cnt
     ORDER BY ${sort} ${order}
-    SKIP {skip} LIMIT {limit}
+    SKIP $skip LIMIT $limit
     RETURN { count: cnt, results:collect(n) }`
 
 /**
  * sequence id generator
  */
-const generateSequence = (name) =>
-  `MERGE (s:Sequence {name:'${name}'})
+const generateSequence = () =>
+  `MERGE (s:Sequence {category:$category})
     ON CREATE set s.current = 1
     ON MATCH set s.current=s.current+1
     WITH s.current as seq return seq`
@@ -71,7 +71,7 @@ const generateSequence = (name) =>
  * query item with members
  */
 const generateQueryItemWithMembersCypher = (label) => {
-  return `MATCH (n:${label} {uuid:{uuid}})
+  return `MATCH (n:${label} {uuid:$uuid})
     OPTIONAL MATCH
         (n)<-[:MemberOf]-(m)
     where not exists(m.status) or m.status<>'deleted'          
@@ -83,7 +83,7 @@ const generateQueryItemWithMembersCypher = (label) => {
  * query node and relations
  */
 const generateQueryNodeWithRelationCypher = (params) => {
-  return `MATCH (n:${params.category}{uuid: {uuid}})
+  return `MATCH (n:${params.category}{uuid: $uuid})
     OPTIONAL MATCH (n)-[]-(c)
     WITH n as self,collect(c) as items
     RETURN self,items`
@@ -97,31 +97,31 @@ const generateQueryItemByCategoryCypher = (params) => {
     return n`
 }
 
-const generateQueryInheritHierarchyCypher = `MATCH (base:CategoryLabel{category:{category}})
+const generateQueryInheritHierarchyCypher = `MATCH (base:CategoryLabel{category:$category})
     MATCH (child)-[:INHERIT]->(base)
     RETURN child`
 
-const generateInheritRelCypher = `MERGE (base:CategoryLabel{category:{category}})
-    MERGE (child:CategoryLabel{category:{subtype}})
+const generateInheritRelCypher = `MERGE (base:CategoryLabel{category:$category})
+    MERGE (child:CategoryLabel{category:$subtype})
     MERGE (child)-[:INHERIT]->(base)`
 
 const addRelCypher = (params, ref) => {
-  let cypher = `MATCH (node:${params.category}{uuid:{uuid}})
-                MATCH (ref_node:${ref.schema}{uuid:{fields}.${ref.attr}})`
+  let cypher = `MATCH (node:${params.category}{uuid:$uuid})
+                MATCH (ref_node:${ref.schema}{uuid:$fields.${ref.attr}})`
 
   let rel_attr = ref.attr.split('.'); let relType = ref.relationship.name
   if (rel_attr.length === 1) {
     if (ref.type === 'array') {
-      cypher = `UNWIND {fields}.${ref.attr} as ref_id
-                MATCH (node:${params.category} {uuid:{uuid}})
+      cypher = `UNWIND $fields.${ref.attr} as ref_id
+                MATCH (node:${params.category} {uuid:$uuid})
                 MATCH (ref_node:${ref.schema}{uuid:ref_id})`
     }
   } else if (rel_attr.length === 2) {
-    cypher = `MATCH (node:${params.category}{uuid:{uuid}})
-                    MATCH (ref_node:${ref.schema}{uuid:{fields}.${rel_attr[0]}.${rel_attr[1]}})`
+    cypher = `MATCH (node:${params.category}{uuid:$uuid})
+                    MATCH (ref_node:${ref.schema}{uuid:$fields.${rel_attr[0]}.${rel_attr[1]}})`
   } else if (rel_attr.length === 3) {
-    cypher = `UNWIND {fields}.${rel_attr[0]} as ref_item
-                    MATCH (node:${params.category} {uuid:{uuid}})
+    cypher = `UNWIND $fields.${rel_attr[0]} as ref_item
+                    MATCH (node:${params.category} {uuid:$uuid})
                     MATCH (ref_node:${ref.schema}{uuid:ref_item.${rel_attr[2]}})`
   } else {
     throw new Error(`${ref.attr} not support`)
@@ -129,7 +129,7 @@ const addRelCypher = (params, ref) => {
   if (ref.relationship.reverse) { cypher = cypher + ` MERGE (node)<-[r:${relType}]-(ref_node)` } else { cypher = cypher + ` MERGE (node)-[r:${relType}]->(ref_node)` }
   if (ref.relationship.parentObjectAsRelProperty) {
     if (rel_attr.length === 2) {
-      cypher = cypher + ` ON CREATE SET r={fields}.${rel_attr[0]} ON MATCH SET r={fields}.${rel_attr[0]}`
+      cypher = cypher + ` ON CREATE SET r=$fields.${rel_attr[0]} ON MATCH SET r=$fields.${rel_attr[0]}`
     } else if (rel_attr.length === 3) {
       cypher = cypher + ` ON CREATE SET r=ref_item ON MATCH SET r=ref_item`
     } else {
@@ -140,7 +140,7 @@ const addRelCypher = (params, ref) => {
 }
 
 const delRelCypher = (params, ref) => {
-  return `MATCH (n:${params.category}{uuid:{uuid}})-[r:${ref.relationship.name}]-() delete r`
+  return `MATCH (n:${params.category}{uuid:$uuid})-[r:${ref.relationship.name}]-() delete r`
 }
 
 const generateDeleteRelationCypher = (params) => {
@@ -168,6 +168,9 @@ const generateAddRelationCypher = (params) => {
 }
 
 module.exports = {
+  generateNodeCypher,
+  generateAddRelationCypher,
+  generateDeleteRelationCypher,
   generateAddCyphers: (params) => {
     let cyphers = [generateNodeCypher(params), ...generateAddRelationCypher(params)]
     return cyphers
@@ -178,7 +181,9 @@ module.exports = {
   },
   generateDelNodeCypher,
   generateQueryNodesCypher: (params) => {
-    let condition = `where not exists(n.status) or n.status<>'deleted'`; let cypher; let label = params.category; let sort = params.sort ? `n.${params.sort}` : `n.lastUpdated`
+    let condition = `where not exists(n.status) or n.status<>'deleted'`; let cypher
+
+    let label = params.category; let sort = params.sort ? `n.${params.sort}` : `n.lastUpdated`
 
     let order = params.order ? params.order : 'DESC'
     if (params.status_filter) {

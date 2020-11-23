@@ -24,7 +24,7 @@ const initApp = async () => {
   const neo4jConfig = config.get('neo4j')
   let koaNeo4jOptions = {
     neo4j: {
-      boltUrl: `bolt://${process.env['NEO4J_HOST'] || neo4jConfig.host}:${neo4jConfig.port}`,
+      url: `neo4j://${process.env['NEO4J_HOST'] || neo4jConfig.host}:${neo4jConfig.port}`,
       user: process.env['NEO4J_USER'] || neo4jConfig.user,
       password: process.env['NEO4J_PASSWD'] || neo4jConfig.password,
       option: { transaction: true }

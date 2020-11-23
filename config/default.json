@@ -90,7 +90,6 @@
   "redis": {
     "host": "localhost",
     "port": 6379,
-    "auth_pass": "admin",
     "no_ready_check": true
   },
   "postgres-notifier": {
