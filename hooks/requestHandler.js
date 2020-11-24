@@ -264,10 +264,6 @@ const generateCypher = async (params, ctx) => {
       params.cypher = cypherBuilder.generateQueryNodeCypher(params)
     } else {
       params.cypher = cypherBuilder.generateQueryNodesCypher(params)
-      if (params.tags || params.subcategory) {
-        params.tags = (params.tags || params.subcategory).split(',')
-        params.cypher = cypherBuilder.generateQueryItemByCategoryCypher(params)
-      }
     }
   }
 }
