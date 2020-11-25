@@ -44,7 +44,7 @@ const findNodesCypher = (label, condition, sort, order) =>
     ORDER BY ${sort} ${order}
     `
 
-const findPaginatedNodesCypher = (label, condition, sort, order) =>
+const findPaginatedNodesCypher = (label, condition, sort, order,skip,limit) =>
   `MATCH (n:${label})
     ${condition}
     WITH
@@ -55,7 +55,7 @@ const findPaginatedNodesCypher = (label, condition, sort, order) =>
     WITH
     n as n, cnt
     ORDER BY ${sort} ${order}
-    SKIP $skip LIMIT $limit
+    SKIP ${skip} LIMIT ${limit}
     RETURN { count: cnt, results:collect(n) }`
 
 /**
@@ -197,7 +197,7 @@ module.exports = {
       condition = condition ? `${condition} and (${tag_filter})` : ` where (${tag_filter})`
     }
     if (params.pagination) {
-      cypher = findPaginatedNodesCypher(label, condition, sort, order)
+      cypher = findPaginatedNodesCypher(label, condition, sort, order,params.skip,params.limit)
     } else {
       cypher = findNodesCypher(label, condition, sort, order)
     }

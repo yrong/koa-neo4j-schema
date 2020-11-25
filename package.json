@@ -1,16 +1,18 @@
 {
   "name": "scirichon-crud-handler",
-  "version": "1.2.0-beta.7",
+  "version": "1.2.0-beta.8",
   "bin": {
     "scirichon-crud-api": "run.js"
   },
   "scripts": {
-    "init": "NODE_NAME=cmdb SCHEMA_TYPE=cmdb NODE_ENV=development initSchema",
+    "init": "node_modules/.bin/initSchema",
     "test": "NODE_NAME=cmdb SCHEMA_TYPE=cmdb NODE_ENV=development mocha",
     "checkStyle": "standard",
     "fixStyle": "standard --fix",
     "prepublish": "npm run fixStyle&&npm run checkStyle&&npm run init&&npm run test",
-    "start": "node_modules/.bin/scirichon-crud-api"
+    "start": "node run.js",
+    "exportToJson": "node_modules/.bin/json-export",
+    "importFromJson": "IMPORT_FOLDER=./export_data/20170927095432 node_modules/.bin/json-import"
   },
   "standard": {
     "ignore": [
@@ -36,9 +38,9 @@
     "scirichon-authenticator": "1.0.0-beta.3",
     "scirichon-cache": "1.0.11-beta.8",
     "scirichon-common": "1.0.7-beta.6",
-    "scirichon-json-exp-imp": "1.1.0-beta.1",
+    "scirichon-json-exp-imp": "1.1.0-beta.2",
     "scirichon-json-schema": "1.0.3-beta.4",
-    "scirichon-json-schema-init": "1.1.0-beta.5",
+    "scirichon-json-schema-init": "1.1.0-beta.6",
     "scirichon-response-mapper": "1.0.7-beta.9",
     "scirichon-response-wrapper": "1.0.2-beta.3",
     "scirichon-search": "1.1.0-beta.2",

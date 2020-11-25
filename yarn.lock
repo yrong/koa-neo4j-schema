@@ -485,6 +485,11 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
+dotenv@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+
 double-ended-queue@^2.1.0-0:
   version "2.1.0-0"
   resolved "https://registry.npmjs.org/double-ended-queue/-/double-ended-queue-2.1.0-0.tgz#103d3527fd31528f40188130c841efdd78264e5c"
@@ -1973,12 +1978,13 @@ scirichon-common@1.0.7-beta.6:
     config "^3.1.0"
     lodash "^4.17.11"
 
-scirichon-json-exp-imp@1.1.0-beta.1:
-  version "1.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/scirichon-json-exp-imp/-/scirichon-json-exp-imp-1.1.0-beta.1.tgz#a725064519ea562668bc9267efb31a8f05f0fc72"
-  integrity sha512-AylFPy5hPDJKSeenXOICaU1KyXYhFIdt4D8tsR1+Zb/uLiRpCOeHEp7Lsiz0Nd5ka6/GI3TAEOTcSpcM4Y32Rg==
+scirichon-json-exp-imp@1.1.0-beta.2:
+  version "1.1.0-beta.2"
+  resolved "https://registry.npmjs.org/scirichon-json-exp-imp/-/scirichon-json-exp-imp-1.1.0-beta.2.tgz#c64fe73e8a8432699571eabaf9fb096f7377d2dc"
+  integrity sha512-lrjFaV41MkWPBj0L4psiQ2OlMzQURPLsj+W8PCrcv26T6oLeWsU4ZZchIpwqSvumVrXLewFgSkqo9ASfoU2uPQ==
   dependencies:
     config "^3.1.0"
+    dotenv "^8.2.0"
     jsonfile "^2.4.0"
     jsonpath "^1.0.2"
     lodash "^4.17.11"
@@ -1990,13 +1996,14 @@ scirichon-json-exp-imp@1.1.0-beta.1:
     scirichon-search "1.1.0-beta.2"
     uuid "^3.3.2"
 
-scirichon-json-schema-init@1.1.0-beta.5:
-  version "1.1.0-beta.5"
-  resolved "https://registry.yarnpkg.com/scirichon-json-schema-init/-/scirichon-json-schema-init-1.1.0-beta.5.tgz#3a1b5164f7ad221de9ef8ed9b493bc345ed9ee6c"
-  integrity sha512-HTfQe/8ScdhbexZbPojtMgcbObtacaf8BmAaW36bzoq4l3ZaqeCCgFNW6irKo9cOkGgdKQi1R9yOxkTAPMKdyQ==
+scirichon-json-schema-init@1.1.0-beta.6:
+  version "1.1.0-beta.6"
+  resolved "https://registry.npmjs.org/scirichon-json-schema-init/-/scirichon-json-schema-init-1.1.0-beta.6.tgz#25010c6f6694404c309b26f3c74424e1d9f19969"
+  integrity sha512-36jwlDXw0B/FsMbpkMhc3qp1mOR1+adFmLMrOVf6PbUdD98xKD/rabfCTiiPe/WnrJuNWKD506aDtBkBJDh7wA==
   dependencies:
     "@elastic/elasticsearch" "^7.9.0"
     config "^3.1.0"
+    dotenv "^8.2.0"
     lodash "^4.17.11"
     neo4j-driver "^4.1.1"
     parse-neo4j "^0.6.11"
