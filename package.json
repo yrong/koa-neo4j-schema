@@ -31,7 +31,7 @@
     "kcors": "^2.2.2",
     "koa-neo4j": "2.0.0-beta.1",
     "license-helper": "^1.0.7",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "log4js-wrapper-advanced": "^1.0.5",
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
